@@ -1,5 +1,6 @@
 package com.BLProgram;
 
+import com.google.gson.Gson;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -9,8 +10,10 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 public class AddressBookService {
 
@@ -23,6 +26,8 @@ public class AddressBookService {
     //public static final String FILE_PATH="C:\\Users\\\\Desktop";
     public static final String FILE_PATH = "F:\\.metadata\\CSVFile\\CSVFileDay28\\AddressBook.csv";
     public static final String CSV_FILE = "/AddressBook.csv";
+    public static final String FILE_PATH1 = "F:\\.metadata\\CSVFile\\CSVFileDay28\\AddressBook.json";
+    public static final String JSON_FILE="/AddressBook.json";
 
     // instantiating scanner and ArrayList in constructor.
     public AddressBookService() {
@@ -375,4 +380,70 @@ public class AddressBookService {
             e.printStackTrace();
         }
     }
+
+    public void writeToJson()
+    {
+        List<Person> contact = getContentOfCsv();
+        Gson gson = new Gson();
+        String json = gson.toJson(contact);
+        try
+        {
+            File file = new File(FILE_PATH1);
+            FileWriter writer = new FileWriter(file);
+            writer.write(json);
+            writer.close();
+            System.out.println("Written sucessfully");
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void readFromJson()
+    {
+        try
+        {
+            Gson gson = new Gson();
+            File file = new File(FILE_PATH1);
+            BufferedReader br = new BufferedReader(new FileReader(FILE_PATH1));
+            Person[] contacts = gson.fromJson(br,Person[].class);
+            List<Person> contactsList = Arrays.asList(contacts);
+            for(Person contact: contactsList) {
+                System.out.println("Name : " + contact.getFirstName()+" "+contact.getLastName());
+                System.out.println("Email : " + contact.getEmailId());
+                System.out.println("PhoneNo : " + contact.getPhoneNumber());
+                System.out.println("Address : " + contact.getAddress());
+                System.out.println("State : " + contact.getState());
+                System.out.println("City : " + contact.getCity());
+                System.out.println("Zip : " + contact.getZipCode());
+                System.out.println("==========================");
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    private List<Person> getContentOfCsv()
+    {
+        try
+        {
+            File file = new File(FILE_PATH);
+            Reader reader = new FileReader(file);
+            CsvToBean<Person> csvToBean = new CsvToBeanBuilder<Person>(reader)
+                    .withType(Person.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+            return csvToBean.parse();
+
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }

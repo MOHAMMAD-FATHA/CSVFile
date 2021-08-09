@@ -13,7 +13,7 @@ public class AddressBookMain {
         while (!isExit)
         {
             System.out.print("Enter Number As Per Your Choice:\n1.Add-New Contacts:\n2.Display-All Records:\n3.Edit Contact\n" +
-                    "\n4.Delete Contact\n5.Create a file:\n6.Write into file\n7.Read a file\n8.Write to csv file\n9.Read from csv file\n10.Exit\n");
+                    "\n4.Delete Contact\n5.Create a file:\n6.Write into file\n7.Read a file\n8.Write to csv file\n9.Read from csv file\n10.Write into JSON\n11.Read from Json\n12.Exit\n");
             int userInput = scanner.nextInt();
             switch (userInput)
             {
@@ -54,6 +54,14 @@ public class AddressBookMain {
                     addressBookService.readFromCsvFile();
                     break;
                 case 10:
+                    //read from csv file.
+                    addressBookService.writeToJson();
+                    break;
+                case 11:
+                    //read from csv file.
+                    addressBookService.readFromJson();
+                    break;
+                case 12:
                     //Exit from program.
                     isExit = true;
                     break;
